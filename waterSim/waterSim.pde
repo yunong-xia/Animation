@@ -227,7 +227,7 @@ void moveParticle(float dt) {
     
     
     if(posList[i].y > 1000){ // hit the ground, then bounce up
-      velList[i].y *= - 0.2;
+      velList[i].y *= - 0.3;
       posList[i].y = 1000;
     }
     
