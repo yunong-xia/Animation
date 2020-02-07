@@ -126,12 +126,12 @@ String projectTitle = "Water Simulation";
 
 
 
-int genRate = 1500;  // particles/sec
+int genRate = 2000;  // particles/sec
 
 int maxSize = 20000;
 
 //lifespan
-float maxLife = 5;
+float maxLife = 4;
 int numParticles = 0;
 //Global array
 
@@ -149,6 +149,17 @@ float elapsedTime;
 float endFrame;
 
 
+Vector ballPos = new Vector(645,940,-300);
+int ballRadius = 60;
+
+Vector ballPos2 = new Vector(645,950,-250);
+int ballRadius2 = 40;
+
+Vector ballPos3 = new Vector(645,950, -350);
+int ballRadius3 = 40;
+
+
+
 void pointGenerate(Vector pos, float radius, float dt) {
   float r;
   float theta;
@@ -161,7 +172,7 @@ void pointGenerate(Vector pos, float radius, float dt) {
     tempVec.add(new Vector(0, r*sin(theta), -r*cos(theta)));
     posList = (Vector[])append(posList,tempVec);
     
-    tempVec = new Vector(200, 0, 0);
+    tempVec = new Vector(300, 0, 0);
     tempVec.add(new Vector(0.7*random(-50,50) , 0.2*random(-200,200), 0.1*random(-100,100)));
     velList = (Vector[])append(velList,tempVec);
     
@@ -186,17 +197,42 @@ void moveParticle(float dt) {
     posList[i].add(tempVec);
     velList[i].add(0,g,0);
     
+    if(posList[i].distanceTo(ballPos) < ballRadius) {   // obstacle of man!!!!! I use three balls to roughly simulate man's collision
+      Vector normal = posList[i].copy();
+      normal.sub(ballPos);
+      normal.normalize();
+      normal.multi(ballRadius*1.01);
+      Vector temp = ballPos.copy();
+      temp.add(normal);
+      posList[i] = temp;
+    }
+    if(posList[i].distanceTo(ballPos2) < ballRadius2) {
+      Vector normal = posList[i].copy();
+      normal.sub(ballPos2);
+      normal.normalize();
+      normal.multi(ballRadius2*1.01);
+      Vector temp = ballPos2.copy();
+      temp.add(normal);
+      posList[i] = temp;
+    }
+    if(posList[i].distanceTo(ballPos3) < ballRadius3) {
+      Vector normal = posList[i].copy();
+      normal.sub(ballPos3);
+      normal.normalize();
+      normal.multi(ballRadius3*1.01);
+      Vector temp = ballPos3.copy();
+      temp.add(normal);
+      posList[i] = temp;
+    }
+    
+    
     if(posList[i].y > 1000){ // hit the ground, then bounce up
-      velList[i].y *= - 0.4;
+      velList[i].y *= - 0.2;
       posList[i].y = 1000;
     }
     
-    if(posList[i].x > 1600) {
-      velList[i].x *= -.6;
-      posList[i].x = 1600;
-    }
     
-    if(lifeList[i] > 2 && lifeList[i] <= 3 ) {
+    if(lifeList[i] > 2 && lifeList[i] <= 3 ) {  // color change
       colList[i]= color(135,206,235);
     }
     
@@ -213,7 +249,7 @@ void moveParticle(float dt) {
 
 
 
-void particleDeath() {
+void particleDeath() {  // particle death function
   int[] liveP = new int[0];
   for(int i = 0; i < numParticles; i ++) { // extract index of those who live
     if(lifeList[i] < maxLife) {
@@ -251,6 +287,7 @@ void particleDeath() {
 
 
 PShape s;
+PShape h;
 
 
 
@@ -261,14 +298,22 @@ PShape s;
 void setup() {
   size(1600,1000,P3D);
   s = loadShape("Rock.obj");
+  h = loadShape("basicman.obj");
   s.scale(0.0013);
   s.rotateX(PI);
   s.rotateY(-PI/2.0);
   s.setFill(color(85, 65, 36));
   //s.rotateX(PI);
+  
+  h.scale(12);
+  h.rotateX(PI);
+  h.rotateY(-PI/2.0);
+  
+  
+  
   perspective(PI/4.0,(float)width/height,1,10000);
   noSmooth();
-  strokeWeight(10);
+  strokeWeight(5);
 }
 
 
@@ -276,13 +321,18 @@ void drawScene() {
   background(255,255,255);
   lights();
   
+  pushMatrix();//human
+  translate(645,1000,-300);
+  shape(h);
+  popMatrix();
   
-  pushMatrix();
+  pushMatrix();//mountain
   translate(0,300,-300);
-  
   shape(s);
   //rotateY(PI);
   popMatrix();
+  
+  
   
   
   Vector pos;
@@ -296,7 +346,7 @@ void drawScene() {
   
   noStroke();
   fill(color(0,191,255));
-  translate(800,1050,-300);
+  translate(1000,1050,-300);
   box(1200,50,300);
   
   
