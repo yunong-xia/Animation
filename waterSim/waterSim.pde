@@ -99,6 +99,14 @@ class Vector {
     this.sub(n); // v - 2v*n/|n|, v and n are vectors.
   }
   
+  float distanceTo(Vector v) {
+    return sqrt((x-v.x)*(x-v.x) + (y-v.y)*(y-v.y) + (z-v.z)*(z-v.z));
+  }
+  
+  float distanceTo(float x2, float y2, float z2) {
+    return sqrt((x-x2)*(x-x2) + (y-y2)*(y-y2) + (z-z2)*(z-z2));
+  }
+  
   String toString() {
     return "("+x+","+y+","+z+")";
   
@@ -159,7 +167,7 @@ void pointGenerate(Vector pos, float radius, float dt) {
     
     tempVec = pos.copy();
     
-    colList = (color[])append(colList, color(0,0,224));
+    colList = (color[])append(colList, color(244));
     
     
     lifeList = (float[])append(lifeList,0);
@@ -188,13 +196,12 @@ void moveParticle(float dt) {
       posList[i].x = 1600;
     }
     
-    
-    if(lifeList[i] > 1 && lifeList[i] <= 3) {
-      colList[i] = color(40,100,237);
+    if(lifeList[i] > 2 && lifeList[i] <= 3 ) {
+      colList[i]= color(135,206,235);
     }
     
     if(lifeList[i] > 3) {
-      colList[i] = color(51,51,224);
+      colList[i] = color(0,191,255);
     }
    
     
@@ -242,17 +249,42 @@ void particleDeath() {
 
 
 
+
+PShape s;
+
+
+
+
+
+
+
 void setup() {
   size(1600,1000,P3D);
+  s = loadShape("Rock.obj");
+  s.scale(0.0013);
+  s.rotateX(PI);
+  s.rotateY(-PI/2.0);
+  s.setFill(color(85, 65, 36));
+  //s.rotateX(PI);
+  perspective(PI/4.0,(float)width/height,1,10000);
   noSmooth();
   strokeWeight(10);
-  
 }
 
 
 void drawScene() {
   background(255,255,255);
   lights();
+  
+  
+  pushMatrix();
+  translate(0,300,-300);
+  
+  shape(s);
+  //rotateY(PI);
+  popMatrix();
+  
+  
   Vector pos;
   
   for(int i = 0; i < numParticles; i++) {
@@ -261,16 +293,17 @@ void drawScene() {
     point(pos.getX(),pos.getY(),pos.getZ());
   }
   
-  noStroke();
-  fill(232);
-  translate(100,500,-280);
-  box(200,800,300);
   
-  //translate(0,500,0);  
+  noStroke();
+  fill(color(0,191,255));
+  translate(800,1050,-300);
+  box(1200,50,300);
   
   
 }
 
+
+float z = 0;
 
 void draw() {
   float startFrame = millis();
@@ -280,13 +313,20 @@ void draw() {
   moveParticle(0.015);  //Question: Should this be a fixed number?
   float endPhysics = millis();
   
-  translate(400,200,0);
-  rotateX(map(mouseY, 0, height, -PI, PI));
-  rotateY(map(mouseX, 0, width, -PI, PI));
+  if(keyPressed && key == 'q') {
+    z -= 10;
+  }
+  if(keyPressed && key == 'w') {
+    z += 10;
+  }
+  camera(5*(mouseX-800)+800, 5*(mouseY-500)+800, z, 800, 500, -150, 
+       0.0, 1.0, 0.0);
   
+  //rotateX(map(mouseY, 0, height, -PI, PI));
+  //rotateY(map(mouseX, 0, width, -PI, PI));
   //Draw the scene
   drawScene();
-  
+
   float endFrame = millis();
   //pointGenerate(new Vector(200, 300, -300), 100);
   particleDeath();
