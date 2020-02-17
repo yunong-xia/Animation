@@ -1,6 +1,6 @@
-//Triple Spring (damped) - 1D Motion
-//CSCI 5611 Thread Sample Code
-// Stephen J. Guy <sjguy@umn.edu>
+//
+//Modified from CSCI 5611 Thread Sample Code
+//Credit to Stephen J. Guy <sjguy@umn.edu>
 
 
 
@@ -8,11 +8,10 @@
 float floor = 500;
 float gravity = 2000;
 float radius = 10;
-float stringTop = 50;
 float restLen = 40;
 float mass = 1;
 float k = 500; //TRY-IT: How does changing k affect resting length?
-float kv = 160;
+float kv = 300;
 
 //Inital positions and velocities of masses
 int numNodes = 6;
