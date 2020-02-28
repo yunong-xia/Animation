@@ -6,12 +6,12 @@
 
 //Simulation Parameters
 float floor = 500;
-float gravity = 2000;
+float gravity = 700;
 float radius = 10;
 float restLen = 40;
 float mass = 1;
-float k = 500; //TRY-IT: How does changing k affect resting length?
-float kv = 300;
+float k = 800; 
+float kv = 400;
 
 //Inital positions and velocities of masses
 int numNodes = 6;
