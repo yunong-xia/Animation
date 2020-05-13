@@ -68,13 +68,15 @@ void mouseDragged() {
 
 
 void draw() {
-  
-  
+  float startFrame = millis();
+  float endFrame = millis();
   
   velStep();
   densStep();
 
   
   renderUI();
-
+  String runtimeReport = "Frame: "+str(endFrame-startFrame)+"ms,"+
+        " FPS: "+ str(round(frameRate)) + "N : " + str(N) + "\n";
+  surface.setTitle("stableFluid"+ "  -  " +runtimeReport);
 }

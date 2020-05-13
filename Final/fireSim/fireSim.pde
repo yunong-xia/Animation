@@ -103,6 +103,7 @@ void setup() {
 char mode;
 
 void draw() {
+   float startFrame = millis();
   if(keyPressed) {
     if(key == 'o' || key == 'O' || key == 'f' || key == 'F')
       mode = key;
@@ -125,5 +126,10 @@ void draw() {
   
   //renderUI();
   fireRender();
+float endFrame = millis();
+ String runtimeReport = "Frame: "+str(endFrame-startFrame)+"ms,"+
+        " FPS: "+ str(round(frameRate)) + " N: " + str(N) + "\n";
+  surface.setTitle("Fire"+ "  -  " +runtimeReport);
+
 
 }
